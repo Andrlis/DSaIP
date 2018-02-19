@@ -29,6 +29,7 @@ def _main():
     fun_values = FourierTransform._function_values(_fun, 2*np.pi, N)
     dft_values = FourierTransform._dft(FourierTransform, fun_values, 1)
     fft_values = FourierTransform._fft_(FourierTransform, fun_values, 1)
+    yf = scipy.fftpack.fft(fun_values)
 
     print(fun_values)
 

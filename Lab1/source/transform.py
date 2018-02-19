@@ -25,12 +25,12 @@ class FourierTransform:
 
         n = len(_values)
         out_values = [0] * n
-        for i in range(n):
+        for k in range(n):
             for j in range(n):
-                out_values[i] += (_values[j] * cmath.exp(-direction_ * 2 * cmath.pi * complex(0, 1) * i * j / n))
+                out_values[k] += (_values[j] * cmath.exp( (-1) * direction_ * 2 * cmath.pi * complex(0, 1) * k / n))
                 self.count += 1
-            if direction_ == 1:
-                out_values[i] /= n
+            if direction_ == -1:
+                out_values[k] /= n
 
         return list(out_values)
 
