@@ -25,11 +25,25 @@ def _test():
     plt.show()
 
 
+def graph(x, y, _title, _text=None):
+    plt.figure(1)
+    plt.grid(True)
+    plt.title(_title)
+    if _text is not None:
+        plt.annotate('Количество операций: ' + _text, xy=(5, 1))
+    plt.plot(x, y)
+    plt.show()
+
+
 def _main():
-    fun_values = FourierTransform._function_values(_fun, 2*np.pi, N)
+    x = range(N)
+    fun_values = FourierTransform._function_values(_fun, 2 * np.pi, N)
+    graph(x, fun_values, 'Исходная функция')
+
     dft_values = FourierTransform._dft(FourierTransform, fun_values, 1)
-    fft_values = FourierTransform._fft_(FourierTransform, fun_values, 1)
-    yf = scipy.fftpack.fft(fun_values)
+    graph(x, dft_values, 'ДПФ', str(FourierTransform.count))
+    # fft_values = FourierTransform._fft_(FourierTransform, fun_values, 1)
+    # yf = scipy.fftpack.fft(fun_values)
 
     print(fun_values)
 
