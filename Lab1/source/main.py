@@ -33,4 +33,4 @@ def _main():
     print(fun_values)
 
 
-_test()
+_main()

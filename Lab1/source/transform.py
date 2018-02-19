@@ -1,4 +1,5 @@
 import cmath
+import math
 
 
 class FourierTransform:
@@ -76,7 +77,7 @@ class FourierTransform:
             return
         r = 0
         for x in range(_len):
-            r = self.rev_next(r, _len)
+            r = self.rev_next(x, _len)
             if r > x:
                 temp = _data[x]
                 _data[x] = _data[r]
@@ -86,9 +87,13 @@ class FourierTransform:
 
 
     @staticmethod
-    def rev_next(r, n):
-        while True:
-            n = n >> 1
-            r = r ^ n
-            if (r & n) != 0:
-                return r
+    def rev_next(x, n):
+        step = math.log2(n)
+        r = 0;
+        while step != 0:
+            r = r << 1
+            r = r + (x & 1)
+            x = x >> 1
+            step = step - 1
+
+        return r
