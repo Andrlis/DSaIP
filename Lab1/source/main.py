@@ -2,6 +2,7 @@ from transform import FourierTransform
 import numpy as np
 import matplotlib.pyplot as plt
 import scipy.fftpack
+import cmath
 
 N = 8
 
@@ -25,27 +26,84 @@ def _test():
     plt.show()
 
 
-def graph(x, y, _title, _text=None):
-    plt.figure(1)
-    plt.grid(True)
-    plt.title(_title)
-    if _text is not None:
-        plt.annotate('Количество операций: ' + _text, xy=(5, 1))
-    plt.plot(x, y)
+def discrete_transform(_values):
+    f, axarr = plt.subplots(2, 2, figsize=(8, 6))
+    plt.tight_layout()
+
+    x = np.linspace(0.0, np.pi/4, 8)
+    dft_values = FourierTransform._dft(FourierTransform, _values, 1)
+    idft_values = FourierTransform._dft(FourierTransform, dft_values, -1)
+
+    pol = list(map(lambda x: cmath.polar(x), dft_values))
+
+    ph_val = []
+    amp_val = []
+
+    for i in range(len(dft_values)):
+        amp_val.append(pol[i][0])
+        ph_val.append(pol[i][1])
+
+    axarr[0, 0].plot(x, _values)
+    axarr[0, 0].set_title('Исходная функция')
+    axarr[0, 0].grid(True)
+
+    axarr[0, 1].plot(x, amp_val)
+    axarr[0, 1].set_title('Амплитудный спект')
+    axarr[0, 1].grid(True)
+
+    axarr[1, 0].plot(x, ph_val)
+    axarr[1, 0].set_title('Фазовый спектр')
+    axarr[1, 0].grid(True)
+
+    axarr[1, 1].plot(x, idft_values)
+    axarr[1, 1].set_title('Обратное преобразование')
+    axarr[1, 1].grid(True)
+
+    plt.show()
+
+
+def fast_transform(_values):
+    f, axarr = plt.subplots(2, 2, figsize=(8, 6))
+    plt.tight_layout()
+
+    x = np.linspace(0.0, np.pi / 4, 8)
+    fft_values = FourierTransform._fft(FourierTransform, _values, 1)
+    ifft_values = FourierTransform._fft(FourierTransform, fft_values, -1)
+
+    pol = list(map(lambda x: cmath.polar(x), fft_values))
+
+    ph_val = []
+    amp_val = []
+
+    for i in range(len(fft_values)):
+        amp_val.append(pol[i][0])
+        ph_val.append(pol[i][1])
+
+    axarr[0, 0].plot(x, _values)
+    axarr[0, 0].set_title('Исходная функция')
+    axarr[0, 0].grid(True)
+
+    axarr[0, 1].plot(x, amp_val)
+    axarr[0, 1].set_title('Амплитудный спект')
+    axarr[0, 1].grid(True)
+
+    axarr[1, 0].plot(x, ph_val)
+    axarr[1, 0].set_title('Фазовый спектр')
+    axarr[1, 0].grid(True)
+
+    axarr[1, 1].plot(x, ifft_values)
+    axarr[1, 1].set_title('Обратное преобразование')
+    axarr[1, 1].grid(True)
+
     plt.show()
 
 
 def _main():
-    x = range(N)
     fun_values = FourierTransform._function_values(_fun, 2 * np.pi, N)
-    graph(x, fun_values, 'Исходная функция')
-
-    dft_values = FourierTransform._dft(FourierTransform, fun_values, 1)
-    graph(x, dft_values, 'ДПФ', str(FourierTransform.count))
-    # fft_values = FourierTransform._fft_(FourierTransform, fun_values, 1)
-    # yf = scipy.fftpack.fft(fun_values)
-
-    print(fun_values)
+    discrete_transform(fun_values)
+    print('DFF number of operations:', FourierTransform.count)
+    fast_transform(fun_values)
+    print('FFT number of operations:', FourierTransform.count)
 
 
 _main()
