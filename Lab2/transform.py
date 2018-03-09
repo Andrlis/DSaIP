@@ -9,13 +9,15 @@ class FourierTransform:
     def _function_values(function_, period_, n_):
         interval = period_ / n_
         func_values = []
+        func_parameters = []
 
         x = complex(0, 0)
         for i in range(n_):
             func_values.append(function_(x))
+            func_parameters.append(x)
             x += interval
 
-        return func_values
+        return func_values, func_parameters
 
     @staticmethod
     def _dft(self, _values, direction):
@@ -26,13 +28,12 @@ class FourierTransform:
 
         for k in range(n):
             for j in range(n):
-                _out_values[k] += _values[j] * cmath.e **(direction * complex(0, -1) * 2 * cmath.pi * k * j / n)
+                _out_values[k] += _values[j] * cmath.e ** (direction * complex(0, -1) * 2 * cmath.pi * k * j / n)
                 self.count += 1
             if direction == -1:
                 _out_values[k] /= n
 
         return _out_values
-
 
     @staticmethod
     def _fft(self, _in_values, direction):
@@ -45,7 +46,6 @@ class FourierTransform:
                 _out_values[i] /= n
 
         return _out_values
-
 
     @staticmethod
     def _fft_(self, _values, direction):
@@ -78,7 +78,6 @@ class FourierTransform:
 
         return y
 
-
     @staticmethod
     def _fft_reorder(self, _data, _len):
         if _len <= 2:
@@ -92,7 +91,6 @@ class FourierTransform:
                 _data[r] = temp
 
         return _data
-
 
     @staticmethod
     def rev_next(x, n):
