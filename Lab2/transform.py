@@ -7,17 +7,14 @@ class FourierTransform:
 
     @staticmethod
     def _function_values(function_, period_, n_):
-        interval = period_ / n_
+        interval = 1 / (2 * period_)
         func_values = []
-        func_parameters = []
-
         x = complex(0, 0)
         for i in range(n_):
             func_values.append(function_(x))
-            func_parameters.append(x)
             x += interval
 
-        return func_values, func_parameters
+        return func_values
 
     @staticmethod
     def _dft(self, _values, direction):
