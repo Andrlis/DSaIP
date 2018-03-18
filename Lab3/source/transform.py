@@ -21,7 +21,9 @@ def fut(sig_data):
 
         return result
 
-    return fun(sig_data)
+    result = fun(sig_data)
+    size = len(result)
+    return list(map(lambda x: x/size, result))
 
 
 def ifut(sig_data):
@@ -47,4 +49,6 @@ def ifut(sig_data):
 
         return result
 
-    return fun(sig_data)
+    result = fun(sig_data)
+    size = len(result)
+    return list(map(lambda x: x * size, result))
