@@ -19,9 +19,11 @@ def fast_transform():
     transform = fut(function_values)
     reverse_transform = ifut(transform)
 
+    plt.tight_layout()
+
     plt.subplot(221)
     plt.plot(x, function_values)
-    plt.title('Исходная фенкция')
+    plt.title('Исходная функция')
     plt.grid(True)
 
     plt.subplot(222)
