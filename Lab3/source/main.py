@@ -38,4 +38,8 @@ def fast_transform():
 
 
 if __name__ == '__main__':
-    fast_transform()
+    print(fut([1,2,3,4,5,6,7,8]))
+    #print(fut_left([1,2,3,4,5,6,7,8]))
+    print(ifut(fut([1, 2, 3, 4, 5, 6, 7, 8])))
+
+    #fast_transform()
