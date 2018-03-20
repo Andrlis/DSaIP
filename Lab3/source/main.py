@@ -11,9 +11,29 @@ def _fun(x):
 
 
 def fast_transform():
+    wal = get_wal_fans()
+    print('Функции Уолша, упорядоченные по частоте')
+    for w in wal:
 
-    # x = np.linspace(0.0, np.pi / 4, 8)
-    # t = np.linspace(0.0, 2 / np.pi, 8)
+        s = ''
+        for i in range(len(w)):
+            if w[i] == 1:
+                s += '+'
+            else:
+                s += '-'
+        print(s)
+
+    print('Функции Уолша, упорядоченные по Адамару')
+    ad_matr = get_matrix(3)
+    for m in ad_matr:
+        s = ''
+        for c in m:
+            if c == 1:
+                s += '+'
+            else:
+                s += '-'
+        print(s)
+
     x = np.linspace(0.0, 2 * np.pi, 8)
     function_values = list(map(lambda i: _fun(i), x))
 
@@ -40,9 +60,33 @@ def fast_transform():
     plt.show()
 
 
-if __name__ == '__main__':
-    print(fut([1,2,3,4,5,6,7,8]))
-    #print(fut_left([1,2,3,4,5,6,7,8]))
-    print(ifut(fut([1, 2, 3, 4, 5, 6, 7, 8])))
+def discrete_transform():
+    x = np.linspace(0.0, 2 * np.pi, 8)
+    function_values = list(map(lambda i: _fun(i), x))
 
-    #fast_transform()
+    transform = dut(function_values)
+    reverse_transform = idut(transform)
+
+    plt.tight_layout()
+
+    plt.subplot(221)
+    plt.plot(x, function_values)
+    plt.title('Исходная функция')
+    plt.grid(True)
+
+    plt.subplot(222)
+    plt.plot(x, transform)
+    plt.title('ДПУ')
+    plt.grid(True)
+
+    plt.subplot(223)
+    plt.plot(x, reverse_transform)
+    plt.title('Обратное ДПУ')
+    plt.grid(True)
+
+    plt.show()
+
+
+if __name__ == '__main__':
+    fast_transform()
+    discrete_transform()

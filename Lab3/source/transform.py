@@ -3,19 +3,49 @@ import numpy as nm
 radem = [[1, 1, 1, 1, -1, -1, -1, -1], [1, 1, -1, -1, 1, 1, -1, -1], [1, -1, 1, -1, 1, -1, 1, -1]]
 
 
-def create_current_matrix(matrix):
-    l = len(matrix)
-    result = nm.empty([l * 2, l * 2], dtype=int)
+def int_to_bin(n):
+    s = str(bin(n))
+    b = [0] * 3
+    i = 2
+    for c in s[::-1]:
+        if c == 'b':
+            break
+        elif int(c) == 1:
+            b[i] = 1
+        i -= 1
 
-    for r in range(l):
-        for c in range(l):
-            result[r][c] = result[r + l][c] = result[r][c + l] = matrix[r][c]
-            result[r + l][c + l] = - matrix[r][c]
+    return b
 
-    return result
+
+def get_wal_fans():
+    wal = [None] * 8
+    for i in range(8):
+        n = int_to_bin(i)
+        r_c = [n[2] ^ n[1], n[1] ^ n[0], n[0] ^ 0]
+
+        wal[i] = [1, 1, 1, 1, 1, 1, 1, 1]
+
+        for j in range(3):
+            if r_c[j] != 0:
+                for k in range(8):
+                    wal[i][k] *= radem[j][k]
+
+    return wal
 
 
 def get_matrix(coef):
+
+    def create_current_matrix(matrix):
+        l = len(matrix)
+        result = nm.empty([l * 2, l * 2], dtype=int)
+
+        for r in range(l):
+            for c in range(l):
+                result[r][c] = result[r + l][c] = result[r][c + l] = matrix[r][c]
+                result[r + l][c + l] = - matrix[r][c]
+
+        return result
+
     if coef == 0:
         return [[1]]
     else:
@@ -23,56 +53,17 @@ def get_matrix(coef):
         return create_current_matrix(prev_matr)
 
 
-def fut_left(sig_data):
-    def fun(sig_data):
-        n = len(sig_data)
-        if n == 1:
-            return sig_data
+def fut(signal):
+    def fun(a):
+        l = len(a)
+        if l == 1:
+            return a
+        else:
+            up = fun(a[0:int(l / 2)])
+            down = fun(a[int(l / 2):l])
+            return list(map(lambda x, y: x + y, up, down)) + list(map(lambda x, y: x - y, up, down))
 
-        first = [] * int(n / 2)
-        second = [] * int(n / 2)
-
-        for i in range(int(n / 2)):
-            first.append(sig_data[i] + sig_data[i + int(n / 2)])
-            second.append(sig_data[i] - sig_data[i + int(n / 2)])
-
-        first_t = fun(first)
-        second_t = fun(second)
-
-        result = [0] * n
-        for i in range(int(n / 2)):
-            result[i] = first_t[i]
-            result[i + int(n / 2)] = second_t[i]
-
-        return result
-
-    return fun(sig_data)
-
-
-def ifut_left(sig_data):
-    def fun(sig_data):
-        n = len(sig_data)
-        if n == 1:
-            return sig_data
-
-        first = [] * int(n / 2)
-        second = [] * int(n / 2)
-
-        for i in range(int(n / 2)):
-            first.append(sig_data[i])
-            second.append(sig_data[i + int(n / 2)])
-
-        first_t = fun(first)
-        second_t = fun(second)
-
-        result = [0] * n
-        for i in range(int(n / 2)):
-            result[i] = (first_t[i] + second_t[i]) / 2
-            result[i + int(n / 2)] = (first_t[i] - second_t[i]) / 2
-
-        return result
-
-    return fun(sig_data)
+    return list(map(lambda x: x / 8, fun(signal)))
 
 
 def ifut(signal):
@@ -88,14 +79,9 @@ def ifut(signal):
     return fun(signal)
 
 
-def fut(signal):
-    def fun(a):
-        l = len(a)
-        if l == 1:
-            return a
-        else:
-            up = fun(a[0:int(l / 2)])
-            down = fun(a[int(l / 2):l])
-            return list(map(lambda x, y: x + y, up, down)) + list(map(lambda x, y: x - y, up, down))
+def dut(signal):
+    return list(map(lambda x: x / 8, get_matrix(3).__matmul__(nm.array(signal).transpose())))
 
-    return list(map(lambda x: x / 8, fun(signal)))
+
+def idut(signal):
+    return get_matrix(3).transpose().__matmul__(nm.array(signal).transpose())
