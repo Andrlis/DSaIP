@@ -1,8 +1,7 @@
 from PIL import Image
-from pylab import *
 from source.ImageTransform import ImageTransform
+from source.ImageFilter import ImageFilter
 import matplotlib.pyplot as plt
-import math
 
 
 def build_histogram(image, channel=0):
@@ -19,13 +18,16 @@ def build_histogram(image, channel=0):
 
 def main():
     image = Image.open("../resources/Minsk2.jpg")
-    image.show()
+    #image.show()
     im1 = ImageTransform.convert_to_grayscale(image)
     # convert_to_negative(image)
     # build_histogram(image)
-    # im1 = gscale_logarithmic_correction(im1, 50)
     #image = ImageTransform.logarithmic_correction(image, 20)
-    im1 = ImageTransform.image_binarization(im1)
+    #im1 = ImageTransform.image_binarization(im1)
+    im1 = ImageFilter.roberts_operator(im1)
+    im1 = ImageTransform.convert_to_negative(im1)
+    im1 = ImageTransform.change_contrast(im1, 8)
+    im1 = ImageTransform.change_brightness(im1, -0.3)
     #image.show()
     im1.show()
     # image.show()

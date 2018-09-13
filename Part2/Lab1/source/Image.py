@@ -3,10 +3,13 @@ import PIL
 
 class Image:
 
-    def __init__(self, name):
-        self.image_name = name
-        self.image = PIL.Image.open(self.image_name)
+    def __init__(self, name=None, image=None):
+        if image is None:
+            self.image = PIL.Image.open(name)
+        else:
+            self.image = image.copy()
         self.width, self.hight = self.image.size
+        self.pixels = self.image.load()
 
     def open(self, name):
         self.image = PIL.Image.open(name)
@@ -16,19 +19,19 @@ class Image:
         return self.width
 
     def get_hight(self):
-        return self.get_hight()
+        return self.hight
+
+    def get_size(self):
+        return self.image.size
 
     def get_pixel_channels(self, x, y):
-        pixels = self.image.load()
-        return [pixels[x, y][0], pixels[x, y][1], pixels[x, y][2]]
+        return [self.pixels[x, y][0], self.pixels[x, y][1], self.pixels[x, y][2]]
 
     def save(self, path, name, format='.jpg'):
         self.image.save(path + "\\" + name + format)
 
-    def copy(self, image):
-        self.image = image.copy()
-        self.width = image.size[1]
-        self.hight = image.size[0]
+    def copy(self):
+        return Image(image=self.image)
 
     def get_pixels(self):
-        return self.image.load()
+        return self.pixels
