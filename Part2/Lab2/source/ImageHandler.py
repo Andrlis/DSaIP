@@ -1,6 +1,3 @@
-import source.Image
-
-
 class ImageHandler:
 
     @staticmethod
@@ -14,10 +11,9 @@ class ImageHandler:
                 r, g, b = map(lambda x: int(x + br_level * x), pixels[i, j])
                 r, g, b = ImageHandler.__normalize_pixel_values(r, g, b)
                 pixels[i, j] = (r, g, b)
-        return pixels
 
     @staticmethod
-    def image_binarization(pixels, width, height,):
+    def image_binarization(pixels, width, height):
         d = width / 8
         t = 0.15
         integral_image = [[0] * width for i in range(height)]
@@ -49,7 +45,16 @@ class ImageHandler:
                 else:
                     pixels[i, j] = 255, 255, 255
 
-        return pixels
+    @staticmethod
+    def convert_to_grayscale(pixels, width, height):
+
+        for i in range(width):
+            for j in range(height):
+                r, g, b = pixels[i, j]
+
+                gray = (r * 0.3 + g * 0.59 + b * 0.11)
+                pixels[i, j] = (int(gray), int(gray), int(gray))
+
 
     # @staticmethod
     # def image_erosion(im_pixels, level=1):
