@@ -9,7 +9,8 @@ class ImageTransform:
         return min(255, max(0, r)), min(255, max(0, g)), min(255, max(0, b))
 
     @staticmethod
-    def logarithmic_correction(image, constant):
+    def logarithmic_correction(image):
+        constant = input('Enter constant:')
         im = image.copy()
         pixels = im.load()
 
@@ -85,7 +86,8 @@ class ImageTransform:
         return im
 
     @staticmethod
-    def change_brightness(image, br_level):
+    def change_brightness(image):
+        br_level = input('Brightness level:')
         im = image.copy()
         pixels = im.load()
         w, h = im.size
@@ -98,7 +100,8 @@ class ImageTransform:
         return im
 
     @staticmethod
-    def change_contrast(image, contrast):
+    def change_contrast(image):
+        contrast = input('Contrast level:')
         im = image.copy()
         pixels = im.load()
         w, h = im.size
