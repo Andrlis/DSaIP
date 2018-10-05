@@ -12,7 +12,6 @@ class ImageFilter:
                     map(lambda x1, x2, x3, x4: int(math.sqrt((x1 - x2) ** 2 + (x2 - x3) ** 2)), pixels[i + 1, j],
                         pixels[i, j + 1], pixels[i, j], pixels[i + 1, j + 1]))
 
-
     @staticmethod
     def __filter(pixels, i, j, kernel, div):
         kernel_size = len(kernel)
@@ -44,3 +43,21 @@ class ImageFilter:
         for i in range(1, width - 1):
             for j in range(1, height - 1):
                 pixels[i, j] = ImageFilter.__filter(pixels, i, j, kernel, div)
+
+    @staticmethod
+    def median_filter(pixels, width, height):
+        buf = [(0, 0, 0)] * 9
+        for i in range(1, width - 1):
+            for j in range(1, height - 1):
+                buf[0] = pixels[i - 1, j - 1]
+                buf[1] = pixels[i - 1, j]
+                buf[2] = pixels[i - 1, j + 1]
+                buf[3] = pixels[i, j - 1]
+                buf[4] = pixels[i, j]
+                buf[5] = pixels[i, j + 1]
+                buf[6] = pixels[i + 1, j - 1]
+                buf[7] = pixels[i + 1, j]
+                buf[8] = pixels[i + 1, j + 1]
+
+                buf.sort()
+                pixels[i, j] = buf[4]

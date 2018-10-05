@@ -10,10 +10,18 @@ def process_image(index):
     width, height = s_image.size
 
     image = s_image.copy()
-    ImageHandler.change_brightness(image.load(), width, height, 0.8)
-    ImageHandler.convert_to_grayscale(image.load(), width, height)
+    #s_image.show()
+    ImageHandler.change_brightness(image.load(), width, height, 0.5)
     ImageFilter.high_frequency_filter(image.load(), width, height)
-    ImageHandler.image_binarization(image.load(), width, height)
+    #ImageFilter.median_filter(image.load(), width, height)
+    #ImageFilter.low_frequency_filter(image.load(), width, height)
+    ImageHandler.convert_to_grayscale(image.load(), width, height)
+    level = ImageHandler.get_mean_brightness(image.load(), width, height)
+    #ImageHandler.binarization(image.load(), width, height, level)
+
+    #ImageFilter.median_filter(image.load(), width, height)
+    #ImageFilter.high_frequency_filter(image.load(), width, height)
+    #ImageHandler.image_binarization(image.load(), width, height)
 
 
     # s_image.show()

@@ -55,6 +55,22 @@ class ImageHandler:
                 gray = (r * 0.3 + g * 0.59 + b * 0.11)
                 pixels[i, j] = (int(gray), int(gray), int(gray))
 
+    @staticmethod
+    def binarization(pixels, width, height, level):
+        for i in range(width):
+            for j in range(height):
+                if pixels[i, j][0] < level:
+                    pixels[i, j] = (0, 0, 0)
+                else:
+                    pixels[i, j] = (255, 255, 255)
+
+    @staticmethod
+    def get_mean_brightness(pixels, width, height):
+        brightness = 0
+        for i in range(width):
+            for j in range(height):
+                brightness += (pixels[i, j][0] + pixels[i, j][1] + pixels[i, j][2]) / 3
+        return int(brightness/(width*height))
 
     # @staticmethod
     # def image_erosion(im_pixels, level=1):
@@ -62,5 +78,3 @@ class ImageHandler:
 
     # @staticmethod
     # def get_image_border(pixels, width, height):
-
-
