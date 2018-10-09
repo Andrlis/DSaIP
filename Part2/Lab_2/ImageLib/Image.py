@@ -47,17 +47,16 @@ class Image:
         im.putdata(pix)
         im.save(file_name + ".jpg", 'JPEG')
 
-    def get_brightness_distribution(self):
-        distribution = []
+    def get_histogram(self):
+        histograms = []
         for channel in self.___pixels:
             histogram = numpy.zeros(256)
-
             for brightness in channel:
                 histogram[brightness] += 1
 
-            distribution.append(histogram)
+            histograms.append(histogram)
 
-        return distribution
+        return histograms
 
     def get_width(self):
         return self.__width

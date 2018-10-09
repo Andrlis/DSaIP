@@ -41,7 +41,7 @@ class ImageHandler:
         return neighborhood
 
     @staticmethod
-    def median_filte(image):
+    def median_filter(image):
         new_image = []
 
         for channel in image.get_pixels():
@@ -50,22 +50,29 @@ class ImageHandler:
                 for j in range(1, image.get_height() - 1):
                     neighbors = ImageHandler.__get_neighbors(channel, i, j, image.get_width())
                     neighbors.sort()
-                    result[image.get_width * j + i] = neighbors[int(len(neighbors) / 2)]
+                    result[image.get_width() * j + i] = neighbors[int(len(neighbors) / 2)]
             new_image.append(result)
 
-        return new_image
+        return Image(new_image,
+                     image.get_width(),
+                     image.get_height(),
+                     image.get_mode())
 
     @staticmethod
     def get_binorized_image(image, division):
         new_channels = list()
 
-        for channel in image.get_channels():
-            new_channels.append(list(map(lambda x: 0 if x < division else 255, channel)))
+        for channel in image.get_pixels():
+            new_channel = []
+            for pixel in channel:
+                new_channel.append(0 if pixel < division else 255)
+
+            new_channels.append(new_channel)
 
         return Image(new_channels,
-                     image.get_height(),
                      image.get_width(),
-                     image.get_range_of_brightness())
+                     image.get_height(),
+                     "1")
 
     @staticmethod
     def __calculate_intensity_sum(histogram):
@@ -76,8 +83,7 @@ class ImageHandler:
 
     @staticmethod
     def devide_classes(image):
-        #greyscale_image = ImageHandler.get_greyscale_image(image)
-        histogram = image.get_brightness_distribution()
+        histogram = image.get_histogram()[0]
 
         amount_of_all_pixels = image.get_height() * image.get_width()
         all_intensity_sum = ImageHandler.__calculate_intensity_sum(histogram)
@@ -108,3 +114,93 @@ class ImageHandler:
                 best_division = current_division
 
         return best_division
+
+    @staticmethod
+    def image_erosion(image_before_erosion, count=1):
+        def erosion(image):
+            if len(image.get_pixels()) != 1:
+                return
+
+            flags_matrix = [[0] * image.get_width() for _ in range(image.get_height())]
+            chanel = copy.copy(image.get_pixels()[0])
+
+            for row in range(image.get_height()):
+                for column in range(image.get_width()):
+                    if chanel[row * image.get_width() + column] == 255:
+                        flag = False
+                        if row != 0:
+                            if chanel[(row - 1) * image.get_width() + column] == 0:
+                                if flags_matrix[row - 1][column] != 1:
+                                    flag = True
+                        if not flag:
+                            if row != image.get_height() - 1:
+                                if chanel[(row + 1) * image.get_width() + column] == 0:
+                                    if flags_matrix[row + 1][column] != 1:
+                                        flag = True
+                        if not flag:
+                            if column != 0:
+                                if chanel[row * image.get_width() + column - 1] == 0:
+                                    if flags_matrix[row][column - 1] != 1:
+                                        flag = True
+                        if not flag:
+                            if column != image.get_width() - 1:
+                                if chanel[row * image.get_width() + column + 1] == 0:
+                                    if flags_matrix[row][column + 1] != 1:
+                                        flag = True
+
+                        if flag:
+                            flags_matrix[row][column] = 1
+                            chanel[row * image.get_width() + column] = 0
+
+            return Image([chanel],
+                         image.get_width(),
+                         image.get_height(),
+                         image.get_mode())
+
+        new_image = image_before_erosion
+        for i in range(count):
+            new_image = erosion(new_image)
+
+        return new_image
+
+    @staticmethod
+    def image_building(image_before_building, count=1):
+
+        def building(image):
+            if len(image.get_pixels()) != 1:
+                return
+
+            flags_matrix = [[0] * image.get_width() for _ in range(image.get_height())]
+            chanel = copy.copy(image.get_pixels()[0])
+
+            for row in range(image.get_height()):
+                for column in range(image.get_width()):
+                    if flags_matrix[row][column] == 0:
+                        if chanel[row * image.get_width() + column] == 255:
+                            if row != 0:
+                                if chanel[(row - 1) * image.get_width() + column] == 0:
+                                    chanel[(row - 1) * image.get_width() + column] = 255
+                                    flags_matrix[row - 1][column] = 1
+                            if row != image.get_height() - 1:
+                                if chanel[(row + 1) * image.get_width() + column] == 0:
+                                    chanel[(row + 1) * image.get_width() + column] = 255
+                                    flags_matrix[row + 1][column] = 1
+                            if column != 0:
+                                if chanel[row * image.get_width() + column - 1] == 0:
+                                    chanel[row * image.get_width() + column - 1] = 255
+                                    flags_matrix[row][column - 1] = 1
+                            if column != image.get_width() - 1:
+                                if chanel[row * image.get_width() + column + 1] == 0:
+                                    chanel[row * image.get_width() + column + 1] = 255
+                                    flags_matrix[row][column + 1] = 1
+
+            return Image([chanel],
+                         image.get_width(),
+                         image.get_height(),
+                         image.get_mode())
+
+        new_image = image_before_building
+        for i in range(count):
+            new_image = building(new_image)
+
+        return new_image
