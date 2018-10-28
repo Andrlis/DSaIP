@@ -1,4 +1,5 @@
 import sys
+import random
 
 from ImageLib.Image import Image
 from ImageLib.ImageHandler import ImageHandler
@@ -31,6 +32,7 @@ def main():
     normalize_vectors = []
     for v in vectors:
         normalize_vectors.append((v[0], []))
+
     for i in range(len(vectors[0][1])):
         array = []
         for v in vectors:
