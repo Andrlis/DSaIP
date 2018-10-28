@@ -2,7 +2,8 @@ import copy
 from ImageLib.Image import Image
 from ImageLib.ImageObject import ImageObject
 
-class ObjectFinder:
+
+class ObjectHandler:
 
     @staticmethod
     def find_object(image):
@@ -28,9 +29,9 @@ class ObjectFinder:
                         border_pixel = True
 
                     if border_pixel:
-                        object.add_border_pixel((x,y))
+                        object.add_border_pixel((x, y))
                     else:
-                        object.add_pixel((x,y))
+                        object.add_pixel((x, y))
 
                     rec(x - 1, y, name, chanel, w, h, flags, object)
                     rec(x + 1, y, name, chanel, w, h, flags, object)
@@ -48,10 +49,9 @@ class ObjectFinder:
             for column in range(image.get_width()):
                 if flags_matrix[row][column] == 0:
                     if chanel[row * image.get_width() + column] == 255:
-
                         objects.append(rec(row, column, current_object_name,
-                            chanel, image.get_width(), image.get_height(),
-                            flags_matrix, ImageObject()))
+                                           chanel, image.get_width(), image.get_height(),
+                                           flags_matrix, ImageObject()))
 
                         current_object_name += 1
 
